@@ -34,7 +34,9 @@ app.engine('.handlebars', expressHbs({defaultLayout: 'layout', extname: '.handle
 app.set('view engine', '.handlebars');
 
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/newsy", { useNewUrlParser: true });
+// mongoose.connect("mongodb://localhost/newsy", { useNewUrlParser: true }); 
+mongoose.connect("mongodb://<dbuser>:<dbpassword>@ds127655.mlab.com:27655/heroku_mbvwjb4x", { useNewUrlParser: true }); 
+
 
 // Routes
 
