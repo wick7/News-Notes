@@ -35,10 +35,12 @@ app.set('view engine', '.handlebars');
 
 // Connect to the Mongo DB
 // mongoose.connect("mongodb://localhost/newsy", { useNewUrlParser: true }); 
-mongoose.connect("mongodb://<dbuser>:<dbpassword>@ds129045.mlab.com:29045/heroku_wfhq17nr", { useNewUrlParser: true }); 
-
-
+// mongoose.connect("mongodb://<dbuser>:<dbpassword>@ds129045.mlab.com:29045/heroku_wfhq17nr", { useNewUrlParser: true }); 
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 // Routes
+
+mongoose.Promise = Promise;
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 app.get("/", function (req, res) {
   res.render('index')
