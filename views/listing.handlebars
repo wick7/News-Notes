@@ -1,0 +1,45 @@
+<div class="container">
+    <div class="row mt-5">
+        <h2>Notes For: {{data.title}}</h2>
+        <a href="/articles" class="btn btn-warning my-2">See Saved Articles</a>
+    </div>
+    <div class="row mt-5">
+
+        <div class="col col-lg-12">
+            <div class="list-group">
+                {{#each data.note}}
+                <div href="#" class="list-group-item list-group-item-action flex-column align-items-start ">
+
+                    <div class="d-flex w-100 justify-content-between">
+
+                        <h5 class="mb-1">Title: {{title}}</h5></br>
+                        {{!-- <small>3 days ago</small> --}}
+                        <div class="col-lg-2"><button data-id={{_id}} class="deleteNote badge badge-danger ml-5 ">X</button></div>
+                    </div>
+                    <p class="mb-1">Note: {{body}}</p>
+                    
+                </div>
+                
+                {{/each}}
+            </div>
+        </div>
+    </div>
+    <div class="row mb-5"></div>
+</div>
+
+<script>
+    $(".deleteNote").on('click', function (e) {
+        event.preventDefault(e);
+        var delNote = {
+            id: $(this).data('id'),
+        }
+        $(this).parent().parent().parent().remove()
+        console.log(delNote)
+          $.ajax({
+            type: "PUT",
+            url: "/delete-note",
+            data: delNote
+        }).then(function (data) {
+        });
+    });
+</script>

@@ -1,0 +1,61 @@
+<main role="main">
+    <section class="jumbotron text-center">
+        <div class="container">
+          <h1 class="jumbotron-heading">Newsie</h1>
+          <p class="lead text-muted">Scrape current NPR Political news articles to save and comment on.</p>
+          <p>
+            <a href="/scrape" class="scrape btn btn-primary my-2">Scrape New Articles</a>
+            <a href="/articles" class="btn btn-secondary my-2">View Saved Articles</a>
+          </p>
+        </div>
+      </section>
+      <div class="album py-5 bg-light">
+        <div class="container">
+
+          <div class="row">
+        {{#each data}}
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+                <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="{{imgLink}}" data-holder-rendered="true">
+                <div class="card-body">
+                  <p class="card-text">{{title}}</p>
+                  <small>{{desc}}</small>
+                  <div class="mt-3 d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                      <a href="{{link}}" target="_blank"><button type="button" class="btn btn-primary btn-sm btn-outline-secondary" style="color:white">View</button></a>
+                      <button data-title="{{title}}" data-desc="{{desc}}" data-imglink="{{imgLink}}" data-date="{{date}}" data-link="{{link}}" type="button" class="save btn btn-success btn-sm btn-outline-secondary" style="color:white">Save</button>
+                    </div>
+                    <small class="text-muted">{{date}}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {{/each}}
+
+          </div>
+        </div>
+      </div>
+</main>
+
+<script>
+$(".save").on('click', function (e) {
+		event.preventDefault(e);
+		var newSavedArticle = {
+			title: $(this).data('title'),
+			desc: $(this).data('desc'),
+			imgLink: $(this).data('imglink'),
+            link: $(this).data('link'),
+			date: $(this).data('date')
+		}
+		$.ajax({
+			type: "POST",
+			url: "/save",
+			data: newSavedArticle
+		}).then(function (data) {
+		});
+	});
+
+    
+
+ 
+</script>

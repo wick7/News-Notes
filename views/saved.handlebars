@@ -1,0 +1,181 @@
+<main role="main">
+    <section class="jumbotron text-center">
+        <div class="container">
+            <h1 class="jumbotron-heading">Saved Articles</h1>
+            <p class="lead text-muted">Scraped articles you have saved!</p>
+            <p>
+                <button href="/scrape" class="delAll btn btn-danger my-2">Delete All Articles</button>
+                {{!-- <a href="/articles" class="btn btn-secondary my-2">View Saved Articles</a> --}}
+            </p>
+        </div>
+    </section>
+    <div class="album py-5 bg-light">
+        <div class="container">
+
+            <div class="row savedRow">
+                {{#each data}}
+                <div class="col-md-4">
+                    <div class="card mb-4 box-shadow">
+                        <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail"
+                            alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="{{imgLink}}"
+                            data-holder-rendered="true">
+                        <div class="card-body">
+                            <p class="card-text">{{title}}</p>
+                            <small>{{desc}}</small>
+                            <div class="mt-3 d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+
+                                    <a href="{{link}}" target="_blank"><button type="button" class="btn btn-success btn-sm btn-outline-secondary"
+                                            style="color:white">View</button></a>
+
+                                    <button data-title="{{title}}" data-desc="{{desc}}" data-imglink="{{imgLink}}"
+                                        data-date="{{date}}" data-link="{{link}}" data-id="{{_id}}" type="button" class="delete btn btn-danger btn-sm btn-outline-secondary"
+                                        style="color:white">Delete</button>
+
+
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Notes
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" data-toggle="modal" data-target="#modal-tag{{_id}}"
+                                                style="cursor:pointer">Create Note</a>
+
+                                            <a class="listing dropdown-item" data-toggle="modal" href="/article-notes/{{_id}}">See Notes</a>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+
+                                <small class="text-muted">{{date}}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{!-- Modal for New Note --}}
+                <div class="modal fade" id="modal-tag{{_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Notes for article entitled: {{title}}</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                  
+                                    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Enter Note Title">
+
+                                    <div class="newNoteArea mt-3">
+                                        <textarea for="note" class="newNote form-control"  rows="3" placeholder="Enter Note"></textarea>
+                                     <button data-article="{{_id}}" for="note" type="submit" class="addNote btn btn-primary mt-4">Save Note</button>
+                                    </div>
+                                </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                {{!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> --}}
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                {{!-- Modal for Existing Notes --}}
+                <div class="modal fade" id="modal-notes{{_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Notes Listing</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                
+                                <div class="list-group">
+                                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">Title</h5>
+                                            {{!-- <small>3 days ago</small> --}}
+                                        </div>
+                                        <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+                                    </a>
+                                   
+                                </div>
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                {{/each}}
+
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+
+<script>
+
+    $(".delete").on('click', function (e) {
+        event.preventDefault(e);
+        var delArticle = {
+            id: $(this).data('id'),
+        }
+        $(this).parent().parent().parent().parent().parent().remove()
+        $.ajax({
+            type: "PUT",
+            url: "/delete",
+            data: delArticle
+        }).then(function (data) {
+        });
+    });
+
+    $(".delAll").on('click', function (e) {
+        event.preventDefault(e);
+
+        $('.savedRow').empty()
+        $.ajax({
+            type: "DELETE",
+            url: "/delete-all"
+        }).then(function () {
+        });
+    });
+
+    $(".addNote").on('click', function (e) {
+		
+		var newNote = {
+            title: $(this).parent().parent().children().val(),
+			body: $(this).siblings().val(),
+            artId: $(this).data('article')
+		}
+
+        $.ajax({
+            type: "POST",
+            url: "/new-note",
+            data: newNote
+        }).then(function (data) {
+        });
+	});
+
+   
+
+</script>
