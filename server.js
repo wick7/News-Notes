@@ -35,7 +35,7 @@ app.set('view engine', '.handlebars');
 
 // Connect to the Mongo DB
 // mongoose.connect("mongodb://localhost/newsy", { useNewUrlParser: true }); 
-mongoose.connect("mongodb://<dbuser>:<dbpassword>@ds127655.mlab.com:27655/heroku_mbvwjb4x", { useNewUrlParser: true }); 
+mongoose.connect("mongodb://<dbuser>:<dbpassword>@ds129045.mlab.com:29045/heroku_wfhq17nr", { useNewUrlParser: true }); 
 
 
 // Routes
