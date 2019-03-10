@@ -3,6 +3,7 @@ var logger = require("morgan");
 var mongoose = require("mongoose");
 var expressHbs = require('express-handlebars');
 var path = require('path');
+const keySecret = require('./config/keys');
 
 // Our scraping tools
 // Axios is a promised-based http library, similar to jQuery's Ajax method
@@ -33,14 +34,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.engine('.handlebars', expressHbs({defaultLayout: 'layout', extname: '.handlebars'}));
 app.set('view engine', '.handlebars');
 
+mongoose.Promise = Promise;
 // Connect to the Mongo DB
 // mongoose.connect("mongodb://localhost/newsy", { useNewUrlParser: true }); 
-// mongoose.connect("mongodb://<dbuser>:<dbpassword>@ds129045.mlab.com:29045/heroku_wfhq17nr", { useNewUrlParser: true }); 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+mongoose.connect(keySecret.dataB.uri, { useNewUrlParser: true }); 
+
+
+// const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 // Routes
 
-mongoose.Promise = Promise;
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+
+// mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 app.get("/", function (req, res) {
   res.render('index')
@@ -74,6 +78,7 @@ app.get("/scrape", function (req, res) {
         .children("img")
         .attr('src');
       result.link = $(this)
+        .children(".item-info-wrap")
         .children(".item-info")
         .children(".title")
         .children("a")
@@ -98,7 +103,7 @@ app.get("/scrape", function (req, res) {
       //     console.log(err);
       //   });
     });
-
+    console.log(scraped)
 
     // Send a message to the client
     res.render('index', {data: scraped});
